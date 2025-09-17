@@ -21,6 +21,15 @@ function createTaskObject(name, category, date, status) {
     console.log(tasks);
 }
 
+const currentDate = new Date();
+
+function checkDate(date) {
+    const taskDate = new Date(date);
+    if(taskDate < currentDate) {
+        taskObj.status = 'Overdue';
+    }
+}
+
 addTaskBtn.addEventListener('click', () => {
     
     // const taskObj = {
@@ -34,6 +43,7 @@ addTaskBtn.addEventListener('click', () => {
     // tasks.push(taskObj);
     // console.log(tasks);
     createTaskObject(taskName, taskCategory, taskDueDate, taskStatus);
+    checkDate(taskObj.dueDate);
 
     const taskDisplay = document.createElement('li');
     const taskNameDisplay = document.createElement('span');
@@ -51,6 +61,7 @@ addTaskBtn.addEventListener('click', () => {
     taskDueDateDisplay.textContent = taskObj.dueDate;
 
     const options = ['In Progress', 'Complete', 'Overdue'];
+
     options.forEach(optionText => {
         if (optionText !== taskObj.status) {
             const otherOption = document.createElement('option');
@@ -58,14 +69,13 @@ addTaskBtn.addEventListener('click', () => {
             otherOption.value = optionText;
             taskStatusDisplay.appendChild(otherOption);
         }
-        console.log(taskObj);
     })
 
+    console.log(taskObj);
 
     taskName.value = '';
     taskCategory.value = '';
     taskDueDate.value = '';
-    taskStatus.value = '';
 
     container.appendChild(taskDisplay);
 
