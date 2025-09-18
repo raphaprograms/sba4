@@ -1,3 +1,4 @@
+
 let taskName = document.getElementById('taskName');
 let taskCategory = document.getElementById('taskCategory');
 let taskDueDate = document.getElementById('taskDueDate');
@@ -6,45 +7,53 @@ let addTaskBtn = document.getElementById('addTaskButton');
 let container = document.getElementById('ul');
 let bigContainer = document.querySelector('main');
 
-const tasks = [];
-let taskObj = {};
+// empty array to store tasks
+let tasks = [];
 
-function createTaskObject(name, category, date, status) {
-    taskObj = {
-       task: name.value,
-       category: category.value,
-       dueDate: date.value,
-       status: status.value
+// Declare current date - did this oustside of event listener so it updates on page load
+const currentDate = new Date();
+
+// check date by math
+function checkDate(now, due) {
+    const dueDate = new Date(due);
+    const difference = dueDate - now
+    if(difference < 0) {
+        taskStatus.value = 'Overdue';
+    }
+}
+
+// function saveTasks() {
+//     localStorage.setItem('tasks', JSON.stringify(tasks));
+// }
+
+// function loadTasks() {
+//     const savedTasks = localStorage.getItem('tasks');
+//     if (saveTasks) {
+//         tasks = JSON.parse(savedTasks);
+//     }
+// }
+
+// loadTasks();
+
+
+
+addTaskBtn.addEventListener('click', () => {
+
+    const taskObj = {
+       task: taskName.value,
+       category: taskCategory.value,
+       dueDate: taskDueDate.value,
+       status: taskStatus.value
     }
     console.log(taskObj);
+    
+    checkDate(currentDate, taskObj.dueDate);
+
 
     tasks.push(taskObj);
     console.log(tasks);
-}
 
-const currentDate = new Date();
-
-function checkDate(date) {
-    const taskDate = new Date(date);
-    if(taskDate < currentDate) {
-        taskObj.status = 'Overdue';
-    }
-}
-
-addTaskBtn.addEventListener('click', () => {
-    
-    // const taskObj = {
-    //    task: taskName.value,
-    //    category: taskCategory.value,
-    //    dueDate: taskDueDate.value,
-    //    status: taskStatus.value
-    // }
-    // console.log(taskObj);
-
-    // tasks.push(taskObj);
-    // console.log(tasks);
-    createTaskObject(taskName, taskCategory, taskDueDate, taskStatus);
-    checkDate(taskObj.dueDate);
+    // saveTasks();
 
     const taskDisplay = document.createElement('li');
     const taskNameDisplay = document.createElement('span');
@@ -52,14 +61,9 @@ addTaskBtn.addEventListener('click', () => {
     const taskDueDateDisplay = document.createElement('span');
     const taskStatusDisplay = document.createElement('select');
 
-    taskDisplay.appendChild(taskNameDisplay);
-    taskDisplay.appendChild(taskCategoryDisplay);
-    taskDisplay.appendChild(taskDueDateDisplay);
-    taskDisplay.appendChild(taskStatusDisplay);
-
-    taskNameDisplay.textContent = taskObj.task;
-    taskCategoryDisplay.textContent = taskObj.category;
-    taskDueDateDisplay.textContent = taskObj.dueDate;
+    taskNameDisplay.textContent = ` ${taskObj.task} `;
+    taskCategoryDisplay.textContent = ` ${taskObj.category} `;
+    taskDueDateDisplay.textContent = ` ${taskObj.dueDate} `;
 
     const options = ['In Progress', 'Complete', 'Overdue'];
     
@@ -67,12 +71,21 @@ addTaskBtn.addEventListener('click', () => {
             const option = document.createElement('option');
             option.textContent = optionText;
             option.value = optionText;
-        if (optionText === taskObj.status) {
-            option.selected = true;
-        }
-
-        taskStatusDisplay.appendChild(option);
+            taskStatusDisplay.appendChild(option);
     });
+
+    taskStatusDisplay.addEventListener('change', (event) => {
+            const changeStatus = event.target.value;
+            taskObj.status = changeStatus;
+            console.log(`Updated status for ${taskObj.task} to: ${changeStatus}`);
+            console.log(taskObj);
+    });
+
+    taskDisplay.appendChild(taskNameDisplay);
+    taskDisplay.appendChild(taskCategoryDisplay);
+    taskDisplay.appendChild(taskDueDateDisplay);
+    taskDisplay.appendChild(taskStatusDisplay);
+
 
 
     console.log(taskObj);
@@ -86,7 +99,24 @@ addTaskBtn.addEventListener('click', () => {
     console.log(tasks);
 });
 
+// filter section
 
+
+function filterByCategory(category) {
+    return tasks.filter(taskObj => taskObj.category === category);
+}
+
+function filterByStatus(status) {
+    return tasks.filter(taskObj => taskObj.status === status);
+}
+
+// this could work logically but how it fits into the current program, i don't know yet
+// function filterByBoth(category, status) {
+//     return tasks.filter(taskObj => taskObj.category === category && taskObj.status === status);
+// }
+
+
+// renders filter input and select
 const filterDisplay = document.createElement('div');
 const filterOption = document.createElement('select');
 const filterInput = document.createElement('input');
@@ -104,6 +134,7 @@ filterDisplay.appendChild(filterButton);
 
 const filterOptions = ['Category', 'Status'];
     
+// renders filter select options
     filterOptions.forEach(filterOptionText => {
             const option = document.createElement('option');
             option.textContent = filterOptionText;
@@ -114,6 +145,7 @@ const filterOptions = ['Category', 'Status'];
 
 
 filterButton.addEventListener('click', () => {
+
     let selection = filterOption.value;
     console.log(selection);
     let filterInputValue = filterInput.value;
@@ -121,9 +153,12 @@ filterButton.addEventListener('click', () => {
     let filteredList = tasks.filter(task => 
         task.category === `${selection}` || task.status ===`${filterInputValue}`);
     console.log(filteredList);
-    
 
 })
+
+function toggleVisibility(){
+    
+}
 
 
 bigContainer.appendChild(filterDisplay);

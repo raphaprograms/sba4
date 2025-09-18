@@ -18,11 +18,11 @@
         <label for="taskDueDate">Select a Date:</label>
         <input id="taskDueDate" type="date" placeholder="Select a date" />
 
-        <label for="taskStatus">Status:</label>
-        <select name="status" id="taskStatus" placeholder= "Select a date">
-            <option value="in-progress">In Progress</option>
-            <option value="complete">Complete</option>
-            <option value="overdue">Overdue</option>
+        <select name="status" id="taskStatus" placeholder= "Set status">
+            <option value="" disabled selected hidden>Status</option>
+            <option id='in-progress' value="in-progress">In Progress</option>
+            <option id='complete' value="complete">Complete</option>
+            <option id='overdue' value="overdue">Overdue</option>
         </select>
 
         <button id="addTaskButton">Add Task</button>

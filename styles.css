@@ -1,0 +1,11 @@
+#in-progress {
+    background-color: rgb(54, 234, 234);
+}
+
+#complete {
+    background-color: rgb(20, 245, 20);
+}
+
+#overdue {
+    background-color: rgb(228, 82, 82);
+}
