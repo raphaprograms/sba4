@@ -15,7 +15,7 @@ function createTaskObject(name, category, date, status) {
        category: category.value,
        dueDate: date.value,
        status: status.value
-    };
+    }
     console.log(taskObj);
 
     tasks.push(taskObj);
@@ -86,13 +86,9 @@ addTaskBtn.addEventListener('click', () => {
     console.log(tasks);
 });
 
-function filterTasks(criteria) {
-    const filteredTasks = [];
-    filteredTasks = tasks.filter(tasks => task.task.toLowercase().includes(criteria.toLowercase()));
-    console.log(filteredTasks);
-}
 
 const filterDisplay = document.createElement('div');
+const filterOption = document.createElement('select');
 const filterInput = document.createElement('input');
 filterInput.type = 'text';
 const currentFilter = document.createElement('span');
@@ -100,13 +96,34 @@ currentFilter.textContent = filterInput.value;
 const filterButton = document.createElement('button');
 filterButton.textContent = 'Filter';
 
-filterButton.addEventListener('click', () => {
-    filterTasks(filterInput.value);
-});
 
+filterDisplay.appendChild(filterOption);
 filterDisplay.appendChild(filterInput);
 filterDisplay.appendChild(currentFilter);
 filterDisplay.appendChild(filterButton);
+
+const filterOptions = ['Category', 'Status'];
+    
+    filterOptions.forEach(filterOptionText => {
+            const option = document.createElement('option');
+            option.textContent = filterOptionText;
+            option.value = filterOptionText;
+
+        filterOption.appendChild(option);
+    });
+
+
+filterButton.addEventListener('click', () => {
+    let selection = filterOption.value;
+    console.log(selection);
+    let filterInputValue = filterInput.value;
+    console.log(filterInputValue);
+    let filteredList = tasks.filter(task => 
+        task.category === `${selection}` || task.status ===`${filterInputValue}`);
+    console.log(filteredList);
+    
+
+})
 
 
 bigContainer.appendChild(filterDisplay);
