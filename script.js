@@ -4,6 +4,7 @@ let taskDueDate = document.getElementById('taskDueDate');
 let taskStatus = document.getElementById('taskStatus');
 let addTaskBtn = document.getElementById('addTaskButton');
 let container = document.getElementById('ul');
+let bigContainer = document.querySelector('main');
 
 const tasks = [];
 let taskObj = {};
@@ -14,7 +15,7 @@ function createTaskObject(name, category, date, status) {
        category: category.value,
        dueDate: date.value,
        status: status.value
-    }
+    };
     console.log(taskObj);
 
     tasks.push(taskObj);
@@ -61,15 +62,18 @@ addTaskBtn.addEventListener('click', () => {
     taskDueDateDisplay.textContent = taskObj.dueDate;
 
     const options = ['In Progress', 'Complete', 'Overdue'];
-
+    
     options.forEach(optionText => {
-        if (optionText !== taskObj.status) {
-            const otherOption = document.createElement('option');
-            otherOption.textContent = optionText;
-            otherOption.value = optionText;
-            taskStatusDisplay.appendChild(otherOption);
+            const option = document.createElement('option');
+            option.textContent = optionText;
+            option.value = optionText;
+        if (optionText === taskObj.status) {
+            option.selected = true;
         }
-    })
+
+        taskStatusDisplay.appendChild(option);
+    });
+
 
     console.log(taskObj);
 
@@ -78,8 +82,33 @@ addTaskBtn.addEventListener('click', () => {
     taskDueDate.value = '';
 
     container.appendChild(taskDisplay);
-
     
+    console.log(tasks);
+});
 
-})
+function filterTasks(criteria) {
+    const filteredTasks = [];
+    filteredTasks = tasks.filter(tasks => task.task.toLowercase().includes(criteria.toLowercase()));
+    console.log(filteredTasks);
+}
+
+const filterDisplay = document.createElement('div');
+const filterInput = document.createElement('input');
+filterInput.type = 'text';
+const currentFilter = document.createElement('span');
+currentFilter.textContent = filterInput.value;
+const filterButton = document.createElement('button');
+filterButton.textContent = 'Filter';
+
+filterButton.addEventListener('click', () => {
+    filterTasks(filterInput.value);
+});
+
+filterDisplay.appendChild(filterInput);
+filterDisplay.appendChild(currentFilter);
+filterDisplay.appendChild(filterButton);
+
+
+bigContainer.appendChild(filterDisplay);
+
 
