@@ -12,28 +12,27 @@ let tasks = [];
 
 // Declare current date - did this oustside of event listener so it updates on page load
 const currentDate = new Date();
+currentDate.setHours(0, 0, 0, 0);
 
 // check date by math
 function checkDate(now, due) {
     const dueDate = new Date(due);
+    dueDate.setHours(0, 0, 0, 0);
+
+    console.log(dueDate);
+    console.log(now);
+
+    // get difference in milliseconds
     const difference = dueDate - now
+    console.log(difference);
+    
     if(difference < 0) {
-        taskStatus.value = 'Overdue';
+        taskStatus.status = 'Overdue';
+        return 'Overdue';
+    } else {
+        return taskStatus.value;
     }
 }
-
-// function saveTasks() {
-//     localStorage.setItem('tasks', JSON.stringify(tasks));
-// }
-
-// function loadTasks() {
-//     const savedTasks = localStorage.getItem('tasks');
-//     if (saveTasks) {
-//         tasks = JSON.parse(savedTasks);
-//     }
-// }
-
-// loadTasks();
 
 
 
@@ -47,13 +46,11 @@ addTaskBtn.addEventListener('click', () => {
     }
     console.log(taskObj);
     
-    checkDate(currentDate, taskObj.dueDate);
+    taskObj.status = checkDate(currentDate, taskObj.dueDate);
 
 
     tasks.push(taskObj);
     console.log(tasks);
-
-    // saveTasks();
 
     const taskDisplay = document.createElement('li');
     const taskNameDisplay = document.createElement('span');
@@ -73,6 +70,8 @@ addTaskBtn.addEventListener('click', () => {
             option.value = optionText;
             taskStatusDisplay.appendChild(option);
     });
+
+    taskStatusDisplay.value = taskObj.status;
 
     taskStatusDisplay.addEventListener('change', (event) => {
             const changeStatus = event.target.value;
@@ -143,7 +142,7 @@ const filterOptions = ['Category', 'Status'];
         filterOption.appendChild(option);
     });
 
-
+// try to set the display none of tasks that get filtered out
 filterButton.addEventListener('click', () => {
 
     let selection = filterOption.value;
@@ -159,6 +158,15 @@ filterButton.addEventListener('click', () => {
 function toggleVisibility(){
     
 }
+// try this for showing the filter list
+// const content = document.getElementById('content');
+// const replaceButton = document.getElementById('replace-btn');
+
+// replaceButton.addEventListener('click', () => {
+// const newContent = document.createElement('div');
+// newContent.textContent = 'This is the new content!';
+// content.replaceWith(newContent);
+// });
 
 
 bigContainer.appendChild(filterDisplay);
